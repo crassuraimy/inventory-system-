@@ -3,22 +3,36 @@
 Laravel API + React/Vite starter for one main store, medical and general inventory, quantity-only stock tracking, dated stock movements, opening stock, purchases, stock issues, monthly 1–31 register, and dashboard low-stock alerts.
 
 ## Backend setup
-1. Create Laravel project: `composer create-project laravel/laravel inventory-api`
-2. Copy the contents of `backend/` into the Laravel project (preserving paths).
-3. Configure `.env` for MySQL:
-   ```
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=inventory
-   DB_USERNAME=root
-   DB_PASSWORD=
-   ```
-4. Run `php artisan install:api` if `routes/api.php` does not exist.
-5. Run `php artisan migrate --seed`
-6. Start: `php artisan serve`
+The backend is a Laravel API using Sanctum authentication and PostgreSQL/Supabase.
 
-This starter uses Laravel Sanctum's `auth:sanctum` middleware for protected routes. Create a user using `php artisan tinker` or your preferred admin workflow. For quick local development only, routes can temporarily be made public, but do not deploy that way.
+1. Install PHP dependencies:
+   ```sh
+   cd backend
+   composer install
+   ```
+2. Copy `.env.example` to `.env` and update the database and Supabase values. For Supabase, use the Supabase PostgreSQL connection details and password only in `.env`:
+   ```env
+   DB_CONNECTION=pgsql
+   DB_HOST=your-supabase-pooler-host
+   DB_PORT=6543
+   DB_DATABASE=postgres
+   DB_USERNAME=postgres.your-project-ref
+   DB_PASSWORD=your-supabase-database-password
+   DB_SSLMODE=require
+   ```
+3. Generate the application key and run migrations:
+   ```sh
+   php artisan key:generate
+   php artisan migrate --seed
+   ```
+4. Start the API:
+   ```sh
+   php artisan serve
+   ```
+
+Do not commit `.env` or store database passwords in documentation. Use placeholders such as `YOUR_ACCESS_TOKEN` and `your-supabase-database-password` in examples.
+
+Authentication is provided by `POST /api/v1/auth/login`. The frontend stores the returned Sanctum token in `sessionStorage` as `inventory_token`, sends it on protected requests, and clears it on logout or HTTP 401. Create users using `php artisan tinker`, `php artisan db:seed`, or your preferred provisioning workflow; do not hardcode access tokens.
 
 ## Frontend setup
 1. `cd frontend`

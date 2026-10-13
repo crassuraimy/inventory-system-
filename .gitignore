@@ -26,3 +26,7 @@ Thumbs.db
 # General
 *.log
 .env
+
+# Local AI tooling
+.agents/
+skills-lock.json
