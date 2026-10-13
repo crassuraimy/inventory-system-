@@ -61,7 +61,7 @@ export default function App() {
     <aside className="sidebar">
       <div className="brand"><div className="brand-icon">I</div><div><strong>Inventory</strong><small>Main Store</small></div></div>
       <nav>{nav.map(([to,label,Icon]) => <NavLink key={to} to={to} end={to === '/'} className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}><Icon size={18}/><span>{label}</span></NavLink>)}</nav>
-      <div className="sidebar-note"><Bell size={17}/><span>Low-stock alerts appear on your dashboard.</span></div>
+      {/* low-stock notifications moved to top header */}
     </aside>
     <main className="main-content">
       <header className="topbar">

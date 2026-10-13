@@ -130,3 +130,14 @@ tbody tr:hover td{background:#f9fafb;}
 .login-card .password-toggle { position:absolute; right:10px; top:50%; transform:translateY(-50%); }
 .login-security-note { display:flex; align-items:flex-start; gap:8px; }
 .login-security-note svg { flex-shrink:0; margin-top:1px; }
+
+/* Dashboard alignment and loading fixes */
+.stats-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+@media (max-width:1050px){ .stats-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:640px){ .stats-grid { grid-template-columns:1fr; } }
+.skeleton-value { display:inline-block; width:72px; height:28px; border-radius:8px; background:linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%); background-size:200% 100%; animation:shimmer 1.2s infinite; }
+@keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
+.low-stock-skeleton { display:grid; gap:8px; padding:12px 0; }
+.low-stock-skeleton span { display:block; height:14px; border-radius:8px; background:linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%); background-size:200% 100%; animation:shimmer 1.2s infinite; }
+.low-stock-skeleton span:first-child { width:45%; }
+.low-stock-skeleton span:last-child { width:70%; }
