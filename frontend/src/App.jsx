@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, PackageMinus, CalendarDays, FileText, Bell, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, PackageMinus, CalendarDays, FileText, Bell, LogOut, User, History } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Items from './pages/Items';
+import Categories from './pages/Categories';
 import PurchaseEntry from './pages/PurchaseEntry';
 import StockOutEntry from './pages/StockOutEntry';
+import StockHistory from './pages/StockHistory';
 import MonthlyRegister from './pages/MonthlyRegister';
 import Reports from './pages/Reports';
 import Login from './pages/Login';
@@ -14,8 +16,10 @@ import api from './api/client';
 const nav = [
   ['/', 'Dashboard', LayoutDashboard],
   ['/items', 'Items', Package],
+  ['/categories', 'Categories & Units', Package],
   ['/purchases', 'Purchases / Stock In', ShoppingCart],
   ['/stock-out', 'Daily Stock Out', PackageMinus],
+  ['/stock-history', 'Stock History', History],
   ['/monthly', 'Monthly Register', CalendarDays],
   ['/reports', 'Reports', FileText],
 ];
@@ -76,7 +80,9 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Protected><Dashboard/></Protected>} />
         <Route path="/items" element={<Protected><Items/></Protected>} />
+        <Route path="/categories" element={<Protected><Categories/></Protected>} />
         <Route path="/purchases" element={<Protected><PurchaseEntry/></Protected>} />
+        <Route path="/stock-history" element={<Protected><StockHistory/></Protected>} />
         <Route path="/stock-out" element={<Protected><StockOutEntry/></Protected>} />
         <Route path="/monthly" element={<Protected><MonthlyRegister/></Protected>} />
         <Route path="/reports" element={<Protected><Reports/></Protected>} />
