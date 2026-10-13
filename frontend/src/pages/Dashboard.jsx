@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Boxes, TrendingUp, TrendingDown, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Boxes, TrendingUp, TrendingDown, AlertTriangle, RefreshCw, Scale, XCircle, History } from 'lucide-react';
 import api from '../api/client';
 
 export default function Dashboard() {
@@ -17,9 +17,11 @@ export default function Dashboard() {
 
   const cards = [
     ['Active items', data?.active_items ?? '—', Boxes, 'neutral'],
+    ['Total units in stock', data?.total_units_in_stock ?? '—', Scale, 'neutral'],
     ['Stock in today', data?.stock_in_today ?? '—', TrendingUp, 'green'],
     ['Stock out today', data?.stock_out_today ?? '—', TrendingDown, 'orange'],
     ['Low-stock items', data?.low_stock_count ?? '—', AlertTriangle, 'red'],
+    ['Out-of-stock items', data?.out_of_stock_count ?? '—', XCircle, 'red'],
   ];
 
   return <div className="page">

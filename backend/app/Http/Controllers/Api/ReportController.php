@@ -34,12 +34,18 @@ class ReportController extends Controller
 
     public function dashboard()
     {
+        $lowStock = $this->lowStock();
+
         return response()->json([
-            'active_items'=>Item::where('is_active', true)->count(),
-            'low_stock_count'=>$this->lowStock()->count(),
-            'stock_in_today'=>(float) StockMovement::whereDate('movement_date', today())->sum('quantity_in'),
-            'stock_out_today'=>(float) StockMovement::whereDate('movement_date', today())->sum('quantity_out'),
-            'low_stock_items'=>$this->lowStock()->take(10)->values(),
+            'active_items' => Item::where('is_active', true)->count(),
+            'total_units_in_stock' => (float) \App\Models\StockBalance::sum('quantity_on_hand'),
+            'low_stock_count' => $lowStock->count(),
+            'out_of_stock_count' => $lowStock->where('status', 'out_of_stock')->count(),
+            'stock_in_today' => (float) StockMovement::whereDate('movement_date', today())->sum('quantity_in'),
+            'stock_out_today' => (float) StockMovement::whereDate('movement_date', today())->sum('quantity_out'),
+            'low_stock_items' => $lowStock->take(10)->values(),
+            'recent_movements' => StockMovement::with('item:id,name,item_code')
+                ->orderByDesc('id')->limit(10)->get(),
         ]);
     }
 
@@ -76,8 +82,15 @@ class ReportController extends Controller
                 $dayMoves = $movements->get($date, collect());
                 $in = (float) $dayMoves->sum('quantity_in');
                 $out = (float) $dayMoves->sum('quantity_out');
+                $dayOpening = $running;
                 $running += $in - $out;
-                $daily[] = ['date'=>$date,'stock_in'=>$in,'stock_out'=>$out,'closing'=>$running];
+                $daily[] = [
+                    'date'=>$date,
+                    'opening'=>$dayOpening,
+                    'stock_in'=>$in,
+                    'stock_out'=>$out,
+                    'closing'=>$running,
+                ];
             }
 
             return [

@@ -1,12 +1,15 @@
-import React from 'react';
-import { NavLink, Routes, Route, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, PackageMinus, CalendarDays, FileText, Bell } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { NavLink, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Package, ShoppingCart, PackageMinus, CalendarDays, FileText, Bell, LogOut, User } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Items from './pages/Items';
 import PurchaseEntry from './pages/PurchaseEntry';
 import StockOutEntry from './pages/StockOutEntry';
 import MonthlyRegister from './pages/MonthlyRegister';
 import Reports from './pages/Reports';
+import Login from './pages/Login';
+import LowStockNotifications from './components/LowStockNotifications';
+import api from './api/client';
 
 const nav = [
   ['/', 'Dashboard', LayoutDashboard],
@@ -17,7 +20,43 @@ const nav = [
   ['/reports', 'Reports', FileText],
 ];
 
+function Protected({ children }) {
+  const token = sessionStorage.getItem('inventory_token');
+  if (!token) return <Navigate to="/login" replace />;
+  return children;
+}
+
 export default function App() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('inventory_user') || '{}'); } catch { return {}; }
+  });
+
+  useEffect(() => {
+    const sync = () => {
+      try { setUser(JSON.parse(sessionStorage.getItem('inventory_user') || '{}')); } catch { setUser({}); }
+    };
+    window.addEventListener('storage', sync);
+    return () => window.removeEventListener('storage', sync);
+  }, []);
+
+  function logout() {
+    const doLogout = async () => {
+      try { await api.post('/v1/auth/logout'); } catch {}
+      sessionStorage.removeItem('inventory_token');
+      sessionStorage.removeItem('inventory_user');
+      setUser({});
+      navigate('/login', { replace: true });
+    };
+    doLogout();
+  }
+
+  const token = sessionStorage.getItem('inventory_token');
+
+  if (!token) {
+    return <Routes><Route path="/login" element={<Login />} /><Route path="*" element={<Navigate to="/login" replace />} /></Routes>;
+  }
+
   return <div className="app-shell">
     <aside className="sidebar">
       <div className="brand"><div className="brand-icon">I</div><div><strong>Inventory</strong><small>Main Store</small></div></div>
@@ -25,15 +64,23 @@ export default function App() {
       <div className="sidebar-note"><Bell size={17}/><span>Low-stock alerts appear on your dashboard.</span></div>
     </aside>
     <main className="main-content">
-      <header className="topbar"><div><span className="eyebrow">MAIN STORE</span><h1>Inventory Management</h1></div><span className="status-pill"><span className="status-dot"/> Single store</span></header>
+      <header className="topbar">
+        <div><span className="eyebrow">MAIN STORE</span><h1>Inventory Management</h1></div>
+        <div className="topbar-actions">
+          <LowStockNotifications />
+          <span className="user-chip"><User size={16}/>{user?.email || 'Signed in'}</span>
+          <button className="button secondary" onClick={logout}><LogOut size={16}/> Logout</button>
+        </div>
+      </header>
       <Routes>
-        <Route path="/" element={<Dashboard/>}/>
-        <Route path="/items" element={<Items/>}/>
-        <Route path="/purchases" element={<PurchaseEntry/>}/>
-        <Route path="/stock-out" element={<StockOutEntry/>}/>
-        <Route path="/monthly" element={<MonthlyRegister/>}/>
-        <Route path="/reports" element={<Reports/>}/>
-        <Route path="*" element={<Navigate to="/" replace/>}/>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Protected><Dashboard/></Protected>} />
+        <Route path="/items" element={<Protected><Items/></Protected>} />
+        <Route path="/purchases" element={<Protected><PurchaseEntry/></Protected>} />
+        <Route path="/stock-out" element={<Protected><StockOutEntry/></Protected>} />
+        <Route path="/monthly" element={<Protected><MonthlyRegister/></Protected>} />
+        <Route path="/reports" element={<Protected><Reports/></Protected>} />
+        <Route path="*" element={<Navigate to="/" replace/>} />
       </Routes>
     </main>
   </div>;
