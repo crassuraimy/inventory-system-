@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\StockIssueController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\UnitController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
@@ -18,6 +20,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/dashboard', [ReportController::class, 'dashboard']);
         Route::apiResource('items', ItemController::class);
+        Route::apiResource('categories', CategoryController::class)->only(['index', 'store']);
+        Route::apiResource('units', UnitController::class)->only(['index', 'store']);
         Route::apiResource('suppliers', SupplierController::class);
 
         Route::get('/stock/balances', [StockController::class, 'balances']);

@@ -141,3 +141,15 @@ tbody tr:hover td{background:#f9fafb;}
 .low-stock-skeleton span { display:block; height:14px; border-radius:8px; background:linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%); background-size:200% 100%; animation:shimmer 1.2s infinite; }
 .low-stock-skeleton span:first-child { width:45%; }
 .low-stock-skeleton span:last-child { width:70%; }
+
+/* Create item modal */
+.modal-backdrop { position:fixed; inset:0; background:rgba(15,23,42,.45); display:grid; place-items:center; padding:24px; z-index:30; }
+.modal { width:min(820px,100%); max-height:calc(100vh - 48px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 80px rgba(15,23,42,.22); padding:24px; }
+.modal-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px; }
+.modal-header h3 { margin:0; font-size:20px; }
+.modal-close { min-width:38px; padding:8px; }
+.wide-field { grid-column:1 / -1; }
+.wide-field textarea { width:100%; min-height:84px; resize:vertical; border:1px solid #dce2ec; border-radius:8px; padding:10px 12px; font:inherit; font-size:12px; }
+.checkbox-field { display:flex; align-items:center; gap:8px; }
+.checkbox-field input { width:auto; }
+@media (max-width:700px){ .modal { padding:18px; } .modal-header { flex-direction:column; } }
