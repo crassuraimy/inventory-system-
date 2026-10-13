@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Package, ShieldCheck } from 'lucide-react';
 import api from '../api/client';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   async function submit(e) {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     setError('');
     try {
@@ -27,19 +30,55 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <form className="login-card" onSubmit={submit}>
-        <div className="brand"><div className="brand-icon">I</div><div><strong>Inventory</strong><small>Main Store</small></div></div>
-        <h2>Sign in</h2>
-        <p className="muted">Use your authorized inventory account.</p>
-        {error && <div className="error-banner">{error}</div>}
-        <label>Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="username" />
-        </label>
-        <label>Password
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
-        </label>
-        <button className="button" disabled={loading}>{loading ? 'Signing in…' : 'Sign in'}</button>
-      </form>
+      <div className="login-container">
+        <div className="login-brand">
+          <div className="brand-icon large">I</div>
+          <div>
+            <strong>Inventory</strong>
+            <small>Main Store Management</small>
+          </div>
+        </div>
+        <form className="login-card" onSubmit={submit} noValidate>
+          <h1>Welcome Back</h1>
+          <p className="muted">Sign in to manage your inventory</p>
+          {error && <div className="error-banner">{error}</div>}
+          <label className="form-field">
+            <span>Email address</span>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@example.com"
+              required
+              autoComplete="username"
+              disabled={loading}
+            />
+          </label>
+          <label className="form-field">
+            <span>Password</span>
+            <div className="password-input">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                autoComplete="current-password"
+                disabled={loading}
+              />
+              <button type="button" className="password-toggle" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </label>
+          <button className="button button-primary button-full" disabled={loading}>
+            {loading ? 'Signing in…' : 'Sign In'}
+          </button>
+          <p className="login-security-note">
+            <ShieldCheck size={14} /> Secure session. Closing the browser tab ends the client-side session.
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
