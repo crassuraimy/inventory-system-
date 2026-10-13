@@ -2,12 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Category;
-use App\Models\Unit;
-use App\Models\Supplier;
 use App\Models\Item;
 use App\Models\StockBalance;
+use App\Models\StockMovement;
+use App\Models\Supplier;
+use App\Models\Unit;
+use Illuminate\Database\Seeder;
 
 class InventorySeeder extends Seeder
 {
@@ -24,7 +25,7 @@ class InventorySeeder extends Seeder
 
         foreach ([
             ['Piece', 'pcs'], ['Box', 'box'], ['Pack', 'pack'],
-            ['Bottle', 'btl'], ['Pair', 'pair'], ['Litre', 'L']
+            ['Bottle', 'btl'], ['Pair', 'pair'], ['Litre', 'L'],
         ] as [$name, $symbol]) {
             Unit::firstOrCreate(['symbol' => $symbol], ['name' => $name]);
         }
@@ -63,7 +64,7 @@ class InventorySeeder extends Seeder
                 'item_type' => $type,
                 'category_id' => $categoryMap[$category],
                 'unit_id' => $unitMap[$unit],
-                'description' => $name . ' for store inventory.',
+                'description' => $name.' for store inventory.',
                 'minimum_stock' => $minimum,
                 'track_expiry' => false,
                 'is_active' => true,
@@ -74,6 +75,20 @@ class InventorySeeder extends Seeder
             ]);
             $balance->quantity_on_hand = $opening;
             $balance->save();
+
+            if (! StockMovement::where('item_id', $item->id)->where('movement_type', 'opening')->exists()) {
+                StockMovement::create([
+                    'item_id' => $item->id,
+                    'movement_date' => now()->toDateString(),
+                    'movement_type' => 'opening',
+                    'quantity_in' => $opening,
+                    'quantity_out' => 0,
+                    'balance_after' => $opening,
+                    'reference_type' => 'opening',
+                    'reference_number' => 'OPENING',
+                    'created_by' => 1,
+                ]);
+            }
         }
     }
 }
