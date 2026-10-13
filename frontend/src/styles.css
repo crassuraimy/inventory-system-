@@ -120,3 +120,13 @@ tbody tr:hover td{background:#f9fafb;}
 @media (min-width:1440px){.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));}.page{padding:36px 40px;}}
 @media (max-width:768px){.login-card{padding:24px;}.page{padding:20px;}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media (max-width:480px){.stats-grid{grid-template-columns:1fr;}.button-full{width:100%;}.form-grid{grid-template-columns:1fr;}}
+
+/* Login alignment precision fixes */
+.login-card .form-field { display:grid; gap:8px; width:100%; text-align:left; }
+.login-card .form-field span { display:block; margin-bottom:0; }
+.login-card .form-field input { width:100%; box-sizing:border-box; min-height:44px; padding:10px 12px; }
+.login-card .password-input { position:relative; width:100%; }
+.login-card .password-input input { width:100%; padding-right:44px; }
+.login-card .password-toggle { position:absolute; right:10px; top:50%; transform:translateY(-50%); }
+.login-security-note { display:flex; align-items:flex-start; gap:8px; }
+.login-security-note svg { flex-shrink:0; margin-top:1px; }
