@@ -1,27 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, PackageMinus, CalendarDays, FileText, Bell, LogOut, User, History } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, PackageMinus, CalendarDays, FileText, Bell, LogOut, User, History, RefreshCw, AlertTriangle, Truck, Settings as SettingsIcon } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Items from './pages/Items';
 import Categories from './pages/Categories';
+import Units from './pages/Units';
+import StockIn from './pages/StockIn';
 import PurchaseEntry from './pages/PurchaseEntry';
 import StockOutEntry from './pages/StockOutEntry';
 import StockHistory from './pages/StockHistory';
+import StockAdjustments from './pages/StockAdjustments';
 import MonthlyRegister from './pages/MonthlyRegister';
 import Reports from './pages/Reports';
+import LowStockReport from './pages/LowStockReport';
+import Suppliers from './pages/Suppliers';
+import UserManagement from './pages/UserManagement';
+import Settings from './pages/Settings';
 import Login from './pages/Login';
 import LowStockNotifications from './components/LowStockNotifications';
 import api from './api/client';
 
 const nav = [
   ['/', 'Dashboard', LayoutDashboard],
-  ['/items', 'Items', Package],
-  ['/categories', 'Categories & Units', Package],
-  ['/purchases', 'Purchases / Stock In', ShoppingCart],
-  ['/stock-out', 'Daily Stock Out', PackageMinus],
+  ['/items', 'Inventory Items', Package],
+  ['/categories', 'Categories', Package],
+  ['/units', 'Units of Measure', Package],
+  ['/stock-in', 'Stock In', ShoppingCart],
+  ['/purchases', 'Purchase Orders', ShoppingCart],
+  ['/stock-out', 'Stock Out', PackageMinus],
   ['/stock-history', 'Stock History', History],
-  ['/monthly', 'Monthly Register', CalendarDays],
-  ['/reports', 'Reports', FileText],
+  ['/stock-adjustments', 'Stock Adjustments', RefreshCw],
+  ['/low-stock', 'Low-Stock Report', AlertTriangle],
+  ['/monthly', 'Monthly Reports', CalendarDays],
+  ['/reports', 'General Reports', FileText],
+  ['/suppliers', 'Suppliers', Truck],
+  ['/users', 'User Management', User],
+  ['/settings', 'Settings', SettingsIcon],
 ];
 
 function Protected({ children }) {
@@ -65,7 +79,6 @@ export default function App() {
     <aside className="sidebar">
       <div className="brand"><div className="brand-icon">I</div><div><strong>Inventory</strong><small>Main Store</small></div></div>
       <nav>{nav.map(([to,label,Icon]) => <NavLink key={to} to={to} end={to === '/'} className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}><Icon size={18}/><span>{label}</span></NavLink>)}</nav>
-      {/* low-stock notifications moved to top header */}
     </aside>
     <main className="main-content">
       <header className="topbar">
@@ -81,11 +94,18 @@ export default function App() {
         <Route path="/" element={<Protected><Dashboard/></Protected>} />
         <Route path="/items" element={<Protected><Items/></Protected>} />
         <Route path="/categories" element={<Protected><Categories/></Protected>} />
+        <Route path="/units" element={<Protected><Units/></Protected>} />
+        <Route path="/stock-in" element={<Protected><StockIn/></Protected>} />
         <Route path="/purchases" element={<Protected><PurchaseEntry/></Protected>} />
-        <Route path="/stock-history" element={<Protected><StockHistory/></Protected>} />
         <Route path="/stock-out" element={<Protected><StockOutEntry/></Protected>} />
+        <Route path="/stock-history" element={<Protected><StockHistory/></Protected>} />
+        <Route path="/stock-adjustments" element={<Protected><StockAdjustments/></Protected>} />
+        <Route path="/low-stock" element={<Protected><LowStockReport/></Protected>} />
         <Route path="/monthly" element={<Protected><MonthlyRegister/></Protected>} />
         <Route path="/reports" element={<Protected><Reports/></Protected>} />
+        <Route path="/suppliers" element={<Protected><Suppliers/></Protected>} />
+        <Route path="/users" element={<Protected><UserManagement/></Protected>} />
+        <Route path="/settings" element={<Protected><Settings/></Protected>} />
         <Route path="*" element={<Navigate to="/" replace/>} />
       </Routes>
     </main>

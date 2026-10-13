@@ -89,7 +89,7 @@ export default function LowStockNotifications() {
                     <span className={item.status === 'out_of_stock' ? 'alert-pill critical' : 'alert-pill'}>
                       <AlertTriangle size={13} /> {statusLabel(item)}
                     </span>
-                    <small>{item.quantity_on_hand} of {item.minimum_stock}</small>
+                    <small>{item.current_stock ?? item.quantity_on_hand} of {item.reorder_level ?? item.minimum_stock}</small>
                     {item.shortage > 0 && <small>Shortage: {item.shortage}</small>}
                   </div>
                 </div>

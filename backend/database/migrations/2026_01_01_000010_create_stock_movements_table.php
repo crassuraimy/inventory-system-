@@ -4,14 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up(): void {
+return new class extends Migration
+{
+    public function up(): void
+    {
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id')->constrained()->restrictOnDelete();
             $table->date('movement_date');
             $table->enum('movement_type', [
-                'opening', 'purchase', 'issue', 'adjustment_in', 'adjustment_out'
+                'opening', 'purchase', 'issue', 'adjustment_in', 'adjustment_out',
             ]);
             $table->decimal('quantity_in', 14, 3)->default(0);
             $table->decimal('quantity_out', 14, 3)->default(0);
@@ -24,5 +26,9 @@ return new class extends Migration {
             $table->index(['reference_type', 'reference_id']);
         });
     }
-    public function down(): void { Schema::dropIfExists('stock_movements'); }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('stock_movements');
+    }
 };
