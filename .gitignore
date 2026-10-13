@@ -1,0 +1,28 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Laravel
+/backend/.env
+/backend/vendor/
+/backend/node_modules/
+/backend/storage/logs/
+/backend/storage/framework/cache/
+/backend/storage/framework/sessions/
+/backend/storage/framework/testing/
+/backend/storage/framework/views/
+/backend/bootstrap/cache/
+/backend/database/database.sqlite
+/backend/database/database.sqlite-*
+/backend/public/storage
+
+# Frontend
+/frontend/.env
+/frontend/node_modules/
+/frontend/dist/
+
+# General
+*.log
+.env
