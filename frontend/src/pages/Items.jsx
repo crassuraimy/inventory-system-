@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Search, X } from 'lucide-react';
+import { Plus, X, Printer } from 'lucide-react';
 import api from '../api/client';
+import ExportButtons from '../components/ExportButtons';
+import PrintHeader from '../components/PrintHeader';
 
 const initialForm = {
   item_code: '', name: '', item_type: 'medical', category_id: '',
@@ -88,18 +90,41 @@ export default function Items() {
           <h2>Inventory items</h2>
           <p>Medical supplies and general company inventory.</p>
         </div>
-        <button className="button" onClick={openModal}><Plus size={16} /> Add item</button>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <button className="button secondary no-print" onClick={() => window.print()}><Printer size={14} /> Print</button>
+          <ExportButtons dataset="items" params={search ? { search } : {}} />
+          <button className="button no-print" onClick={openModal}><Plus size={16} /> Add item</button>
+        </div>
       </div>
-      <div className="toolbar">
+      <div className="toolbar no-print">
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search item name or code" />
         <button className="button secondary" onClick={load}>Search</button>
       </div>
       {error && <div className="error-banner">{error}</div>}
+
+      <PrintHeader title="Inventory Items" />
+
       <section className="panel table-wrap">
         <table>
-          <thead><tr><th>Item code</th><th>Item name</th><th>Type</th><th>Category</th><th>Unit</th><th>Available</th><th>Minimum</th></tr></thead>
+          <thead><tr><th>Item code</th><th>Item name</th><th>Type</th><th>Category</th><th>Unit</th><th>Available</th><th>Minimum</th><th>Status</th></tr></thead>
           <tbody>
-            {items.map(i => <tr key={i.id}><td>{i.item_code}</td><td><strong>{i.name}</strong></td><td><span className="type-pill">{i.item_type}</span></td><td>{i.category?.name || '—'}</td><td>{i.unit?.symbol || '—'}</td><td>{i.balance?.quantity_on_hand ?? 0}</td><td>{i.minimum_stock}</td></tr>)}
+            {items.map(i => {
+              const qty = Number(i.balance?.quantity_on_hand ?? 0);
+              const min = Number(i.minimum_stock ?? 0);
+              const status = qty <= 0 ? 'Out of stock' : (qty <= min ? 'Low stock' : 'Normal');
+              return (
+                <tr key={i.id}>
+                  <td>{i.item_code}</td>
+                  <td><strong>{i.name}</strong></td>
+                  <td><span className="type-pill">{i.item_type}</span></td>
+                  <td>{i.category?.name || '—'}</td>
+                  <td>{i.unit?.symbol || '—'}</td>
+                  <td>{qty}</td>
+                  <td>{i.minimum_stock}</td>
+                  <td><span className={`status-badge ${status === 'Normal' ? 'fully_received' : status === 'Low stock' ? 'pending_approval' : 'cancelled'}`}>{status}</span></td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         {!loading && !items.length && <div className="empty-state"><strong>No items to display</strong><span>Add items with the Add item button.</span></div>}

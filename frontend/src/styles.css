@@ -153,3 +153,56 @@ tbody tr:hover td{background:#f9fafb;}
 .checkbox-field { display:flex; align-items:center; gap:8px; }
 .checkbox-field input { width:auto; }
 @media (max-width:700px){ .modal { padding:18px; } .modal-header { flex-direction:column; } }
+
+/* Export and status helpers */
+.export-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.export-error { color:#b91c1c; font-size:12px; }
+.spin { animation:spin 1s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.status-badge { display:inline-flex; align-items:center; padding:5px 9px; border-radius:999px; font-size:10px; font-weight:700; text-transform:capitalize; background:#eef2f7; color:#475569; }
+.status-badge.draft { background:#eef2f7; color:#475569; }
+.status-badge.pending_approval { background:#fef3c7; color:#b45309; }
+.status-badge.approved { background:#dbeafe; color:#1d4ed8; }
+.status-badge.ordered { background:#e0e7ff; color:#4338ca; }
+.status-badge.partially_received { background:#ffedd5; color:#c2410c; }
+.status-badge.fully_received { background:#dcfce7; color:#15803d; }
+.status-badge.posted { background:#dcfce7; color:#15803d; }
+.status-badge.cancelled { background:#fee2e2; color:#b91c1c; }
+.status-badge.reversed { background:#f1f5f9; color:#64748b; text-decoration:line-through; }
+.row-actions { display:flex; gap:6px; flex-wrap:wrap; }
+.row-actions .button { padding:7px 10px; font-size:11px; }
+.detail-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:16px; }
+.detail-grid div { display:grid; gap:3px; }
+.detail-grid span { font-size:11px; color:#7c879b; text-transform:uppercase; letter-spacing:.4px; }
+.detail-grid strong { font-size:13px; color:#1d2940; }
+.pagination { display:flex; align-items:center; gap:10px; justify-content:flex-end; margin-top:14px; font-size:12px; color:#64748b; }
+.print-only { display:none; }
+
+/* Print layouts */
+@media print {
+  @page { size:A4; margin:14mm; }
+  body { background:#fff; }
+  .sidebar, .topbar, .no-print, .notification-dropdown, .pagination { display:none !important; }
+  .app-shell { display:block; }
+  .main-content { overflow:visible; }
+  .page { padding:0; max-width:none; }
+  .panel { border:0; box-shadow:none; padding:0; margin-bottom:18px; page-break-inside:auto; }
+  .panel-heading { margin-bottom:10px; }
+  .print-only { display:block; }
+  .print-header { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; border-bottom:2px solid #0f172a; padding-bottom:10px; margin-bottom:16px; }
+  .print-header h1 { font-size:18px; margin:0 0 4px; }
+  .print-header p { margin:2px 0; font-size:11px; color:#334155; }
+  .print-company { display:flex; align-items:center; gap:10px; }
+  .print-logo { width:42px; height:42px; border-radius:10px; background:#0f172a; color:#fff; display:grid; place-items:center; font-weight:800; font-size:20px; }
+  table { white-space:normal; font-size:10.5px; }
+  th, td { padding:6px 7px; border:1px solid #cbd5e1; }
+  thead { display:table-header-group; }
+  tr { page-break-inside:avoid; }
+  .table-wrap { overflow:visible; }
+  .monthly-table table { min-width:0; }
+  .monthly-table th:first-child, .monthly-table td:first-child { position:static; }
+  .button { display:none !important; }
+  .status-badge { border:1px solid #94a3b8; }
+  .page-break { page-break-before:always; }
+}
+
